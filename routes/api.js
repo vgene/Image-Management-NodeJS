@@ -17,7 +17,7 @@ router.get('/getCarImages', function(req, res, next) {
 	console.log(err);
       else{
         var carimgs=db.collection('carimgs');
-        carimgs.find({id:query_id},{id:1,_id:0,mImage:1,sImage:1,brand:1,type:1,lImage:1},{date:-1}).toArray(function(err,items){
+        carimgs.find({id:query_id},{id:1,_id:0,mImage:1,sImage:1,brand:1,type:1,lImage:1}).sort({date:-1}).toArray(function(err,items){
           if (err || !items ||items.length==0)
 	    res.send({code:'nok'});
 	  else

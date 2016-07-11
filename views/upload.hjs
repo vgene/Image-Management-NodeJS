@@ -45,7 +45,7 @@
 		</div>-->
 		<div class="container kv-main">
             <div class="page-header">
-            <h2>上传文件(zip文件)</h2>
+            <h2>上传文件(图片文件)</h2>
             </div>
             <form enctype="multipart/form-data">
                 <input  name="carfile" id="file-0" class="file" type="file" multiple data-min-file-count="1">
