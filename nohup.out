@@ -1,0 +1,23 @@
+[33m[nodemon] 1.9.2[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching: *.*[39m
+[32m[nodemon] starting `node ./bin/www`[39m
+events.js:141
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: EBADF: bad file descriptor, read
+    at Error (native)
+[0mGET /upload [32m200 [0m14.071 ms - 3839[0m
+[0mGET /css/bootstrap.min.css [36m304 [0m4.005 ms - -[0m
+[0mGET /css/default.css [36m304 [0m0.566 ms - -[0m
+[0mGET /css/fileinput.css [36m304 [0m0.818 ms - -[0m
+[0mGET /js/bootstrap.min.js [36m304 [0m0.993 ms - -[0m
+[0mGET /js/fileinput_locale_zh.js [36m304 [0m0.956 ms - -[0m
+[0mGET /js/fileinput.js [36m304 [0m0.915 ms - -[0m
+[0mGET /js/jquery.min.js [36m304 [0m0.176 ms - -[0m
+[0mGET /fonts/glyphicons-halflings-regular.woff [36m304 [0m0.346 ms - -[0m
+[0mGET /img/loading.gif [33m404 [0m7.495 ms - 1183[0m
+[0mPOST /php/upload.php [33m404 [0m5.644 ms - 1183[0m
+[0mGET /php/submit.php?factory=a&cartype=b&carID=c [33m404 [0m0.533 ms - 1183[0m
+[0mGET /img/loading-sm.gif [33m404 [0m0.959 ms - 1183[0m
