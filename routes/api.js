@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
 
+//todo 整合常量
 var url = 'mongodb://localhost:29017/carDB';
 /* GET users listing. */
 router.get('/getCarImages', function(req, res, next) {
@@ -16,6 +17,7 @@ router.get('/getCarImages', function(req, res, next) {
       if (err)
 	console.log(err);
       else{
+        //todo 整合常量
         var carimgs=db.collection('carimgs');
         carimgs.find({id:query_id},{id:1,_id:0,mImage:1,sImage:1,brand:1,type:1,lImage:1}).sort({date:-1}).toArray(function(err,items){
           if (err || !items ||items.length==0)
@@ -71,6 +73,7 @@ router.get('/getCarTypes',function(req,res,next){
     if (err)
       console.log(err);
     else{
+      //todo 整合常量
       var carInfo=db.collection('carINFO');
       carInfo.find({},{_id:0,id:1,type:1,brand:1,count:1}).toArray(function(err,items){
         if (err || !items ||items.length==0)

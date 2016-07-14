@@ -9,8 +9,8 @@
  * http://www.opensource.org/licenses/MIT
  */
 var nowType=null;
+//todo 整合常量
 var ROOT_URL='http://222.29.98.109';
-
 
 function uploadWithType(){
     window.location = '/upload?id='+nowType;

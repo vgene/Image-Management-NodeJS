@@ -1,7 +1,10 @@
+//遍历train-carType-img文件夹
+//将所有的jpg图片加入mongo数据库
+
 var mongoose=require('mongoose');
 var fs=require('fs');
 var root_path=process.argv[2] //root path of img file
-
+//todo 整合常量
 mongoose.connect('mongodb://localhost:29017/carDB');
 
 var imgSchema = new mongoose.Schema({
@@ -42,7 +45,7 @@ function transverse(root,id){
 	});
 }
 
-function tranverseMain(root){
+function transverseMain(root){
 	var folders = fs.readdirSync(root);
 
 	folders.forEach(function (folder){
@@ -53,4 +56,4 @@ function tranverseMain(root){
 	});
 }
 
-tranverseMain(root_path);
+transverseMain(root_path);

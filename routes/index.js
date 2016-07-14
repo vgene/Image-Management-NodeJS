@@ -20,7 +20,7 @@ router.get('/upload',function(req,res,next){
 
   if (infos.id) {
     infos.readonly = "readonly=\"readonly\"";
-
+//todo 整合常量
     var url='http://localhost:5055/api/getInfosByID?id='+infos.id;
     http.get(url,function(apiRes){
       var resData=[];

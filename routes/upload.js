@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var im =require('imagemagick');
 var MongoClient = require('mongodb').MongoClient;
-
+//todo 整合常量
 var url = 'mongodb://localhost:29017/carDB';
 
 var saveToDB=function(infos,min,mid,ori, callback) {
@@ -81,13 +81,14 @@ router.post('/images',uploadMulter.single('carfile'),function (req,res,next) {
     console.log(file);
 
     if (infos && infos.id && file) {
+        //todo 整合常量
         var DATA_PATH = '/home/zyxu/carImageData/img/';
         var iName =  infos.id+'_'+Date.now();
         var min = 'thumbnail/'+iName;
         var mid = 'train/'+iName;
         var ori = 'original/'+iName;
-
-        im.convert([file.path, '-resize',"256x256", DATA_PATH+mid+'.jpg'],function (err,stdout) {
+//todo 移动完应该删除tmp中内容
+        im.convert([file.path, '-resize',"256x256!", DATA_PATH+mid+'.jpg'],function (err,stdout) {
            if (err){
                final_err=err;
                sendErr();
