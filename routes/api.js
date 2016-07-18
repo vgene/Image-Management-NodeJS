@@ -84,5 +84,45 @@ router.get('/getCarTypes',function(req,res,next){
     }
   });
 });
+router.get('/getCarBrands',function(req,res,next){
+	MongoClient.connect(url,function(err,db){
+    if (err)
+      console.log(err);
+    else{
+      //todo 整合常量
+      var carInfo=db.collection('carINFO');
+      carInfo.aggregate([{$group : {_id : "$brand"}}]).toArray(function(err,items){
+        if (err || !items ||items.length==0)
+          res.send({code:'nok'});
+        else
+          res.send({code:'ok',cars:items});
+      })
+    }
+  });
+});
+router.get('/getTypebyBrand',function(req,res,next){
+  var infos={};
+  if (req.query && req.query.name && req.query.name!=""){
+    var name = req.query.name;
+	console.log(name);
+    MongoClient.connect(url,function(err,db){
+      if (err)
+        console.log(err);
+      else{
+        var carINFO=db.collection('carINFO');
+        carINFO.find({brand:name}).toArray(function(err,item){
+			console.log(item);
+          if (err || !item)
+            res.send({code:'nok',msg:'no item with id'});
+          else
+            res.send({code:'ok',data:item});
+        })
+      }
+    });
+  }
+  else{
+    res.send({code:'nok',msg:'empty id'});
+  }
 
+});
 module.exports = router;

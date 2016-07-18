@@ -13,17 +13,18 @@
 -->
 <html lang="en">
 <head>
-<!--[if IE]>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<![endif]-->
-<meta charset="utf-8">
-<title>CNN车型识别</title>
-<meta name="description" content="Use CNN to do auto car recognition">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="css/bootstrap.min.css">
-<link rel="stylesheet" href="css/blueimp-gallery.min.css">
-<link rel="stylesheet" href="css/bootstrap-image-gallery.css">
-<link rel="stylesheet" href="css/demo.css">
+    <!--[if IE]>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <![endif]-->
+    <meta charset="utf-8">
+    <title>CNN车型识别</title>
+    <meta name="description" content="Use CNN to do auto car recognition">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/blueimp-gallery.min.css">
+	<link rel="stylesheet" href="css/bootstrap-image-gallery.css">
+    <link rel="stylesheet" href="css/demo.css">
+
 </head>
 <body>
 <div class="navbar navbar-default navbar-fixed-top navbar-inverse">
@@ -38,7 +39,7 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="javascript:void(0);" onclick="showCarTypes();nowType=null">选择车型</a></li>
+                <li><a href="/">选择车型</a></li>
                 <li><a href="upload">添加新车</a></li>
                 <li><a href="readme">查看说明</a></li>
                 <li><a href="#">&copy; VG Ziyang</a></li>
@@ -53,7 +54,34 @@
     <h1 class="text-center col-lg-12" id="carType">汽车型号</h1>
     <button type="button" class="btn btn-info col-lg-2 col-lg-offset-5 hidden" id="btnAddImage" onclick="uploadWithType()">添加图片</button>
     </div>
-
+	<div class="container col-lg-12">
+		<div class="row">
+			<!-- The container for the list of example images -->
+			<div class="col-md-2">
+				<div class="dropdown">
+				  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					<span id="chooseBrand">选择品牌</span>
+					<span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="brandMenu"  style="height: 400px; overflow: scroll;">
+				  </ul>
+				</div>
+			</div>
+			<div class="col-md-2">
+			<div class="dropdown">
+			  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				<span id="chooseType">选择型号</span>
+				<span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="typeMenu">
+			  </ul>
+			</div>
+			</div>
+			<div class="col-md-1">
+				<button type="button" class="btn btn-primary" onclick="submit(carID)">查询</button>
+			</div>
+		</div>
+	</div>
     <div id="typeLinks" class="container col-lg-12" style="padding-top: 20px">
 
     </div>
@@ -103,5 +131,80 @@
 <script src="js/bootstrap-image-gallery.js"></script>
 <script src="js/jquery.lazyload.js"></script>
 <script src="js/demo.js"></script>
+<script>
+var carID=null;
+$(function () {
+    //var folder = "img/train/"
+    var car_brand_url='/api/getCarBrands';
+    $.ajax({
+
+        url: car_brand_url,
+        data: {
+            format: 'json'
+        },
+
+        success: function (result) {
+            var linksContainer = $('#brandMenu')
+            var baseUrl;
+
+            $.each(result.cars, function (index, car) {
+                $('<li/>')
+                    .append(
+                        $('<a/>')
+                            .append(car._id)
+                            .attr('href', "javascript:void(0);")
+							.attr('onclick',"getTypebyBrand(\'"+car._id+"\');")
+                            )
+                    .appendTo(linksContainer)
+            })
+        }
+    }).done(
+)
+});
+function getTypebyBrand(brand){
+	$("#chooseBrand").text(brand);
+	$("#chooseType").text("选择型号");
+	$("#typeMenu").text(null);
+	//document.getElementById("chooseBrand").innerHTML = brand;
+	//document.getElementById("typeMenu").innerHTML = null;
+	var car_brand_url='/api/getTypebyBrand?name='+brand;
+	 $.ajax({
+
+        url: car_brand_url,
+        data: {
+            format: 'json'
+        },
+
+        success: function (result) {
+            var linksContainer = $('#typeMenu')
+            var baseUrl;
+
+            $.each(result.data, function (index, car) {
+                $('<li/>')
+                    .append(
+                        $('<a/>')
+                            .append(car.type)
+                            .attr('href', "javascript:void(0);")
+							.attr('onclick',"selectType(\'"+car.type+"\',\'"+car.id+"\');")
+                            )
+                    .appendTo(linksContainer)
+            })
+        }
+    }).done(
+)
+}
+function selectType(type,id){
+	$("#chooseType").text(type);
+	//document.getElementById("chooseType").innerHTML = type;
+	carID=id;
+}
+function submit(id){
+	var car=$("#chooseBrand").text()+' '+$("#chooseType").text();
+	$("#carType").text(car);
+	$("#btnAddImage").removeClass('hidden');
+	$("#links").empty();
+	loadCarType(id);
+}
+</script>
 </body>
 </html>
