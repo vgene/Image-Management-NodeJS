@@ -2,14 +2,27 @@ var express = require('express');
 var router = express.Router();
 var http = require('http');
 
+
+function ensureAuthenticated(req,res,next){
+  if (req.isAuthenticated()){
+    if (req.user && req.user.privilege != 'unchecked')
+      next();
+    else{
+      res.render('login',{err:"尚未审核"});
+    }
+  }else{
+    res.render('login',{err:'重新登陆'});
+  }
+}
+
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/', ensureAuthenticated, function(req, res, next) {
+  res.render('index', { title: 'Express' ,user:req.user});
 });
-router.get('/temp',function(req,res,nest){
+router.get('/temp', ensureAuthenticated, function(req,res,nest){
   res.render('temp');
 });
-router.get('/upload',function(req,res,next){
+router.get('/upload',ensureAuthenticated, function(req,res,next){
   var infos={};
   try{
   if (req.query && req.query.id && req.query.id!=""){
@@ -46,13 +59,14 @@ router.get('/upload',function(req,res,next){
     })
   }
   else{
+    infos.user = req.user;
     res.render('upload',infos);
   }
 
 });
 
-router.get('/readme',function(req,res){
-  res.render('readme');
+router.get('/readme',ensureAuthenticated,function(req,res){
+  res.render('readme',{user:req.user});
 });
 
 module.exports = router;

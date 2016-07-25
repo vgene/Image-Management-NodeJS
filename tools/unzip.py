@@ -55,7 +55,7 @@ while True:
 count=0
 for file in filelist:
     ext=file[file.rfind("."):].lower()
-    #print(ext)
+    sys.stderr.write(ext+'\n')
     if ext!=".jpg" and ext!=".gif" and ext!=".png" and ext!=".jpeg":
         sys.stderr.write("file format error,abort")
         sys.exit()
@@ -64,7 +64,7 @@ for file in filelist:
         continue
     #print(file)
     newfile="%s%s"%(iname,count)
-    cpCmd="cp "+file+" "+savepath+orig+newfile+".jpg"
+    cpCmd="cp "+file+" "+savepath+orig+newfile+ext
     #cpCmd=cpCmd.replace("\n","")
     sys.stdout.write(newfile+"\n")
     copy=subprocess.call(cpCmd,shell=True)

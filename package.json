@@ -6,6 +6,12 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "express-session":"*",
+    "bcryptjs":"*",
+    "passport":"*",
+    "passport-local":"*",
+    "mongoose":"*",
+    "mongodb":"*",
     "imagemagick":"*",
     "multer":"*",
     "body-parser": "~1.15.1",

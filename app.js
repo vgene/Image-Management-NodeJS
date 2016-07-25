@@ -5,9 +5,16 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var session = require('express-session');
+var passport = require('passport');
+var mongoose = require('mongoose');
+
+mongoose.connect("mongodb://localhost:29017/carDB");
+
 var routes = require('./routes/index');
 var api = require('./routes/api');
 var upload = require('./routes/upload');
+var user = require('./routes/user');
 
 var app = express();
 
@@ -24,10 +31,26 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+  secret:'secret',
+  saveUninitialized:true,
+  resave:true
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', routes);
 app.use('/api', api);
 app.use('/upload',upload);
+app.use('/user',user);
 
+
+
+app.use(function(req,res,next){
+  res.locals.user = req.user || null;
+  next();
+});
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

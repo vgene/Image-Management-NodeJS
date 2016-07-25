@@ -56,7 +56,7 @@ var saveToDB=function(infos,min,mid,ori, callback) {
 var multer = require('multer');
 var storage = multer.diskStorage({
     destination:function(req,file,cb){
-        cb(null,'/tmp/1234')
+        cb(null,'/tmp/uploads')
     },
     filename:function(req,file,cb){
         cb(null,Date.now()+'-'+file.originalname)
