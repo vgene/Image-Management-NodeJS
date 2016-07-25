@@ -81,7 +81,7 @@
             showUpload:false,
             uploadAsync:true,
             uploadUrl: '/upload/images', // you must set a valid URL here else you will get an error
-            'allowedFileExtensions' : ['jpg', 'png','gif'],
+            'allowedFileExtensions' : ['jpg', 'png','gif','zip'],
 	    maxFilesNum: 200
 	    })
         .on('fileuploaded',function(event,data,previewId,index){
