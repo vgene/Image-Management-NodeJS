@@ -11,7 +11,7 @@
 var nowType=null;
 //todo 整合常量
 var ROOT_URL='http://222.29.98.109';
-
+var dbarray;
 function uploadWithType(){
     window.location = '/upload?id='+nowType;
 }
@@ -65,11 +65,12 @@ function loadCarType (cartype) {
     success:function (result) {
     var linksContainer = $('#links')
     var baseUrl;
+	dbarray=new Array();
   //  // Add the demo images as links with thumbnails to the page:
     $.each(result.data, function (index, car) {
       baseUrl = ROOT_URL+'/img/';
       // console.log(result.data);
-
+	  dbarray.push(car.sImage);
       var hImage = car.mImage;
       if (car.lImage && car.lImage!=""){
           hImage = car.lImage;
@@ -125,6 +126,6 @@ function loadCarType (cartype) {
   $('#fullscreen-checkbox').on('change', function () {
     $('#blueimp-gallery').data('fullScreen', $(this).is(':checked'))
   })
-
+  
 
 }

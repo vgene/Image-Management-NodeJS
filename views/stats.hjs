@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+<!--
+/*
+ * Bootstrap Image Gallery Demo
+ * https://github.com/blueimp/Bootstrap-Image-Gallery
+ *
+ * Copyright 2013, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * http://www.opensource.org/licenses/MIT
+ */
+-->
+<html lang="en">
+<head>
+    <!--[if IE]>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <![endif]-->
+    <meta charset="utf-8">
+    <title>CNN车型识别</title>
+    <meta name="description" content="Use CNN to do auto car recognition">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/blueimp-gallery.min.css">
+	<link rel="stylesheet" href="css/bootstrap-image-gallery.css">
+    <link rel="stylesheet" href="css/demo.css">
+
+</head>
+<body>
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-fixed-top .navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href=".">CNN车型识别</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/">选择车型</a></li>
+                <li><a href="upload">添加新车</a></li>
+                <li><a href="readme">查看说明</a></li>
+                <li><a href="stats">统计信息</a></li>
+                <li><a onclick="loadRecentImage()">&copy; VG Ziyang</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container">
+  <h1 class="text-center col-lg-12">统计信息</h1>
+</div>
+<div class="container">
+  <p>截至目前，网站收录车辆品牌数<span id="brandCount"></span>，型号数<span id="typeCount"></span>，图片总数<span id="picCount"></span>。
+  </p>
+</div>
+<div class="container">
+  <h2 class="page-header">品牌与型号</h2>
+  <table class="table">
+      <caption>网站收录的汽车品牌、型号与图片数量</caption>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>品牌</th>
+          <th>型号统计</th>
+        </tr>
+      </thead>
+      <tbody id="table1">
+
+      </tbody>
+    </table>
+</div>
+<div class="container">
+  <h2 class="page-header">最近上传</h2>
+  <table class="table">
+      <caption>显示最近上传的汽车图片与对应型号，每页20条</caption>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>型号</th>
+          <th>上传时间</th>
+		  <th>图片链接</th>
+        </tr>
+      </thead>
+      <tbody id="table2">
+		<tr>
+		  <td scope="row">123</td>
+		  <td>456</td>
+		  <td>789</td>
+		  <td>901</td>
+		</tr>
+		  
+      </tbody>
+    </table>
+  <div class="container  col-lg-6 col-lg-offset-3">
+	  <ul class="pagination">
+		  <li><a onclick="loadRecentImage(1)">1</a></li>
+		  <li><a onclick="loadRecentImage(2)">2</a></li>
+		  <li><a onclick="loadRecentImage(3)">3</a></li>
+		  <li><a onclick="loadRecentImage(4)">4</a></li>
+		  <li><a onclick="loadRecentImage(5)">5</a></li>
+	  </ul>
+  </div>
+</div>
+
+<!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
+
+<script src="js/jquery.min.js"></script>
+<!-- Bootstrap JS is not required, but included for the responsive demo navigation and button states -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.blueimp-gallery.min.js"></script>
+<script src="js/bootstrap-image-gallery.js"></script>
+<script src="js/jquery.lazyload.js"></script>
+<script src="js/demo.js"></script>
+<script>
+var carID=null;
+$(function () {
+    //var folder = "img/train/"
+    var car_stats_url='/api/stats';
+    $.ajax({
+
+        url: car_stats_url,
+        data: {
+            format: 'json'
+        },
+
+        success: function (result) {
+			$('#brandCount').text(result.brand);
+			$('#typeCount').text(result.type);
+			$('#picCount').text(result.img);
+
+        }
+    }).done(
+)
+	var car_type_url='/api/getCarTypes';
+	var lastbrand=null,thisbrand=null;
+	var linksContainer = $('#table1');
+		var appendStr;
+		var brandCnt=0;
+	$.ajax({
+
+        url: car_type_url,
+        data: {
+            format: 'json'
+        },
+		
+        success: function (result) {
+			$.each(result.cars, function (index, car) {
+				
+                thisbrand=car.brand;
+				if(thisbrand==lastbrand){
+					appendStr+=car.type+'('+car.count+')&nbsp;&nbsp;';
+				}
+				else{
+					brandCnt=brandCnt+1;
+					lastbrand=thisbrand;
+					if(brandCnt!=1){
+						appendStr+='</td></tr>';
+					}
+					appendStr+='<tr><td scope="row">'+brandCnt+'</td><td>'+car.brand+'</td><td>'+car.type+'('+car.count+')&nbsp;&nbsp;';
+				}
+				
+            })
+			linksContainer.append(appendStr);
+			linksContainer.append('</td></tr>');
+        }
+    }).done(
+)
+	loadRecentImage(1);
+});
+function loadRecentImage(id){
+	var count=1;
+	var query_url='api/recent?page='+id;
+	$('#table2').empty();
+	var linksContainer=$('#table2');
+	$.ajax({
+
+        url: query_url,
+        data: {
+            format: 'json'
+        },
+		
+        success: function (result) {
+			$.each(result.data, function (index, car) {
+				var appendStr='<tr><td scope="row">'+count+'</td><td>'+car.brand+' '+car.type+'</td><td>'+car.date+'</td><td><a href="http://222.29.98.109/img/'+car.lImage+'.jpg">查看</a></td></tr>';
+				$('#table2').append(appendStr);
+				count=count+1;
+            })
+        }
+    }).done(
+)
+}
+</script>
+</body>
+</html>

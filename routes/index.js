@@ -6,8 +6,8 @@ var http = require('http');
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
-router.get('/temp',function(req,res,nest){
-  res.render('temp');
+router.get('/stats',function(req,res,nest){
+  res.render('stats');
 });
 router.get('/upload',function(req,res,next){
   var infos={};

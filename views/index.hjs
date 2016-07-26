@@ -42,6 +42,7 @@
                 <li><a href="/">选择车型</a></li>
                 <li><a href="upload">添加新车</a></li>
                 <li><a href="readme">查看说明</a></li>
+				<li><a href="stats">统计信息</a></li>
                 <li><a href="#">&copy; VG Ziyang</a></li>
             </ul>
         </div>
@@ -50,14 +51,15 @@
 
 <div class="container">
     <!-- The container for the list of example images -->
-    <div class="container col-lg-12">
+    <div class="container col-lg-6 col-lg-offset-3">
     <h1 class="text-center col-lg-12" id="carType">汽车型号</h1>
-    <button type="button" class="btn btn-info col-lg-2 col-lg-offset-5 hidden" id="btnAddImage" onclick="uploadWithType()">添加图片</button>
-    </div>
-	<div class="container col-lg-12">
+    <button type="button" class="btn btn-info col-lg-4 col-lg-offset-4 hidden" id="btnAddImage" onclick="uploadWithType()">添加图片</button>
+	</div>
+	
+	<div class="container col-lg-8 col-lg-offset-2">
 		<div class="row">
 			<!-- The container for the list of example images -->
-			<div class="col-md-2">
+			<div class="col-md-3 col-lg-offset-2">
 				<div class="dropdown">
 				  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 					<span id="chooseBrand">选择品牌</span>
@@ -67,7 +69,7 @@
 				  </ul>
 				</div>
 			</div>
-			<div class="col-md-2">
+			<div class="col-md-3">
 			<div class="dropdown">
 			  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 				<span id="chooseType">选择型号</span>
@@ -78,7 +80,7 @@
 			</div>
 			</div>
 			<div class="col-md-1">
-				<button type="button" class="btn btn-primary" onclick="submit(carID)">查询</button>
+				<button type="button" class="btn btn-primary" onclick="submit(nowType)">查询</button>
 			</div>
 		</div>
 	</div>
@@ -115,6 +117,10 @@
                         <i class="glyphicon glyphicon-chevron-left"></i>
                         Previous
                     </button>
+					<button type="button" class="btn btn-danger" onclick="deleteWarning()">
+                        删除
+                        <i class="glyphicon glyphicon-remove"></i>
+                    </button>
                     <button type="button" class="btn btn-primary next">
                         Next
                         <i class="glyphicon glyphicon-chevron-right"></i>
@@ -124,6 +130,7 @@
         </div>
     </div>
 </div>
+
 <script src="js/jquery.min.js"></script>
 <!-- Bootstrap JS is not required, but included for the responsive demo navigation and button states -->
 <script src="js/bootstrap.min.js"></script>
@@ -132,7 +139,7 @@
 <script src="js/jquery.lazyload.js"></script>
 <script src="js/demo.js"></script>
 <script>
-var carID=null;
+var imgNum=0;
 $(function () {
     //var folder = "img/train/"
     var car_brand_url='/api/getCarBrands';
@@ -185,7 +192,7 @@ function getTypebyBrand(brand){
                         $('<a/>')
                             .append(car.type)
                             .attr('href', "javascript:void(0);")
-							.attr('onclick',"selectType(\'"+car.type+"\',\'"+car.id+"\');")
+							.attr('onclick',"selectType(\'"+car.type+"\',\'"+car.id+"\',\'"+car.count+"\');")
                             )
                     .appendTo(linksContainer)
             })
@@ -193,17 +200,46 @@ function getTypebyBrand(brand){
     }).done(
 )
 }
-function selectType(type,id){
+function selectType(type,id,count){
 	$("#chooseType").text(type);
 	//document.getElementById("chooseType").innerHTML = type;
-	carID=id;
+	nowType=id;
+	imgNum=count;
 }
 function submit(id){
-	var car=$("#chooseBrand").text()+' '+$("#chooseType").text();
+	var car=$("#chooseBrand").text()+' '+$("#chooseType").text()+'('+imgNum+')';
 	$("#carType").text(car);
 	$("#btnAddImage").removeClass('hidden');
 	$("#links").empty();
+	nowType=id;
 	loadCarType(id);
+}
+function deleteWarning(){
+	var remove=confirm("您将删除该图片，操作不可恢复，是否继续？");
+	var gallery=$('#blueimp-gallery').data('gallery');
+	if(remove){
+		var index=gallery.getIndex();
+		var delete_url='/api/deleteimg?img='+dbarray[index]+'&id='+nowType;
+		$.ajax({
+
+        url: delete_url,
+        data: {
+            format: 'json'
+        },
+
+        success: function (result) {
+			if(result.code=='ok'){
+				alert("删除成功！");
+				gallery.next();
+			}
+				
+			else
+				alert("删除失败！");
+
+        }
+    }).done(
+)
+	}
 }
 </script>
 </body>

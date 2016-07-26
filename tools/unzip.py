@@ -12,6 +12,7 @@ thumb="thumbnail/"
 path=sys.argv[1]
 savepath=sys.argv[2]
 iname=sys.argv[3]
+path=path.replace(' ','\\ ')
 pos=path.rfind(".")
 dir=path[:pos]
 ext=path[pos:]
@@ -35,7 +36,7 @@ elif ext==".rar":
 unzip=subprocess.call(unzipCmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 #check unzip result
 #print(unzip)
-if unzip!=0:
+if unzip>1:
     sys.stderr.write("unzip failed")
     sys.exit()
 findCmd="find "+dir+" -name \"*.*\" "
@@ -54,8 +55,8 @@ while True:
 #print(len(filelist))
 count=0
 for file in filelist:
+    filec=file.replace(' ','\\ ')
     ext=file[file.rfind("."):].lower()
-    #print(ext)
     if ext!=".jpg" and ext!=".gif" and ext!=".png" and ext!=".jpeg":
         sys.stderr.write("file format error,abort")
         sys.exit()
@@ -64,7 +65,7 @@ for file in filelist:
         continue
     #print(file)
     newfile="%s%s"%(iname,count)
-    cpCmd="cp "+file+" "+savepath+orig+newfile+".jpg"
+    cpCmd="cp "+filec+" "+savepath+orig+newfile+ext
     #cpCmd=cpCmd.replace("\n","")
     sys.stdout.write(newfile+"\n")
     copy=subprocess.call(cpCmd,shell=True)
@@ -72,12 +73,12 @@ for file in filelist:
         subprocess.call("rm -rf "+dir,shell=True)
         sys.stderr.write("copy failed,abort")
         sys.exit()
-    convert=subprocess.call(convert1+file+" "+savepath+train+newfile+".jpg",shell=True)
+    convert=subprocess.call(convert1+filec+" "+savepath+train+newfile+".jpg",shell=True)
     if convert!=0:
         subprocess.call("rm -rf "+dir,shell=True)
         sys.stderr.write("convert to 256x256 failed!,abort")
         sys.exit()
-    convert=subprocess.call(convert2+file+" "+savepath+thumb+newfile+".jpg",shell=True)
+    convert=subprocess.call(convert2+filec+" "+savepath+thumb+newfile+".jpg",shell=True)
     if convert!=0:
         subprocess.call("rm -rf "+dir,shell=True)
         sys.stderr.write("convert to 50x50 failed!,abort")

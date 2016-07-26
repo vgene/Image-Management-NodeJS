@@ -59,7 +59,7 @@ var storage = multer.diskStorage({
         cb(null,'/tmp/1234')
     },
     filename:function(req,file,cb){
-        cb(null,Date.now()+'-'+file.originalname)
+        cb(null,Date.now())
     }
 });
 var uploadMulter = multer({storage:storage});
@@ -136,11 +136,12 @@ router.post('/images',uploadMulter.single('carfile'),function (req,res,next) {
             });
         }
         if(ext==="zip"){
-            console.log(file.path);
-            console.log(DATA_PATH);
-			console.log(iName);
+            //console.log(file.path);
+            //console.log(DATA_PATH);
+			//console.log(iName);
+			console.log("python tools/unzip.py "+file.path+" "+DATA_PATH+" "+iName);
             unzip=child_process.exec("python tools/unzip.py "+file.path+" "+DATA_PATH+" "+iName,function(err,stdout,stderr){
-                //console.log(stderr);
+                //console.log(stdout);
                 if(stderr.length!=0){
                     final_err=stderr;
                     sendErr();
@@ -153,7 +154,7 @@ router.post('/images',uploadMulter.single('carfile'),function (req,res,next) {
 					if(car.length<1)
 						break;
 					min='thumbnail/'+car;
-					mid='train'+car;
+					mid='train/'+car;
 					ori='original/'+car;
 					saveToDB(infos,min,mid,ori,function(err){
 						if (err){
