@@ -19,8 +19,8 @@ function ensureAuthenticated(req,res,next){
 router.get('/', ensureAuthenticated, function(req, res, next) {
   res.render('index', { title: 'Express' ,user:req.user});
 });
-router.get('/temp', ensureAuthenticated, function(req,res,nest){
-  res.render('temp');
+router.get('/stats',function(req,res,nest){
+  res.render('stats');
 });
 router.get('/upload',ensureAuthenticated, function(req,res,next){
   var infos={};

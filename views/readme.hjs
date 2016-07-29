@@ -28,6 +28,7 @@
                 <li><a href="/">选择车型</a></li>
                 <li><a href="/upload">添加新车</a></li>
                 <li><a href="/readme">查看说明</a></li>
+                <li><a href="/stats">统计信息</a></li>
                 <li><a href="#">&copy; VG Ziyang</a></li>
             </ul>
 
