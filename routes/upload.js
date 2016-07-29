@@ -59,7 +59,9 @@ var storage = multer.diskStorage({
         cb(null,'/tmp/uploads')
     },
     filename:function(req,file,cb){
-        cb(null,Date.now())
+	var ext=file.originalname;
+        ext=ext.substring(ext.lastIndexOf(".")+1,ext.length);
+        cb(null,Date.now().toString()+'.'+ext)
     }
 });
 var uploadMulter = multer({storage:storage});

@@ -65,13 +65,18 @@ for file in filelist:
         continue
     #print(file)
     newfile="%s%s"%(iname,count)
-    cpCmd="cp "+filec+" "+savepath+orig+newfile+ext
+    #cpCmd="cp "+filec+" "+savepath+orig+newfile+ext
     #cpCmd=cpCmd.replace("\n","")
     sys.stdout.write(newfile+"\n")
-    copy=subprocess.call(cpCmd,shell=True)
-    if copy!=0:
+    #copy=subprocess.call(cpCmd,shell=True)
+    #if copy!=0:
+    #    subprocess.call("rm -rf "+dir,shell=True)
+    #    sys.stderr.write("copy failed,abort")
+    #    sys.exit()
+    convert=subprocess.call("convert "+filec+" "+savepath+orig+newfile+".jpg",shell=True)
+    if convert!=0:
         subprocess.call("rm -rf "+dir,shell=True)
-        sys.stderr.write("copy failed,abort")
+        sys.stderr.write("convert to jpeg failed!,abort")
         sys.exit()
     convert=subprocess.call(convert1+filec+" "+savepath+train+newfile+".jpg",shell=True)
     if convert!=0:
