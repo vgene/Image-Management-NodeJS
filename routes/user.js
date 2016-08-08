@@ -34,7 +34,7 @@ passport.use(new LocalStrategy(
             if (err) throw err;
             
             if (!user){
-                return done(null,false,{message:"未找到用户"});
+                return done(null,false);
             }
             
             User.validPassword(password,user.password,function(err,isMatch){
@@ -42,7 +42,7 @@ passport.use(new LocalStrategy(
                 if (isMatch)
                     return done(null,user);
                 else{
-                    return done(null,false,{message:"密码错误"});
+                    return done(null,false);
                 }
             })
         })
